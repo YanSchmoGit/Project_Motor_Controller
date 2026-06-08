@@ -4,25 +4,27 @@
 
 #include "../Inc/Application.h"
 #include "stm32l476xx.h"
+#include "../Inc/MotorDriver.h"
 
-// Hier können Sie echten C++ Code nutzen (Klassen, Namespaces etc.)
-class LedBlinker {
-public:
-    void toggle() {
-        RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
-        GPIOA->MODER &= ~GPIO_MODER_MODE5_Msk;
-        GPIOA->MODER |= GPIO_MODER_MODE5_0;
 
-        GPIOA->BSRR |= GPIO_BSRR_BS5;
-    }
-};
+void Application_Main(void)
+{
 
-void Application_Main(void) {
-    LedBlinker blinker;
+    // Test Hall Sensor PC8
 
-    // Bare-Metal Super-Loop
-    while (1) {
-        blinker.toggle();
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
+    GPIOC->MODER &= ~GPIO_MODER_MODE8_Msk;
+    GPIOC->PUPDR |= GPIO_MODER_MODE8_1;
+
+    // Onboard LED...
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+
+
+    MotorDriver TestMotor;
+
+    while (1)
+    {
+        TestMotor.DriveMotor(2000, 1);
 
     }
 }
