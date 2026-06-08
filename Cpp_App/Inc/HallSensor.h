@@ -1,0 +1,14 @@
+//
+// Created by yan on 6/8/26.
+//
+
+#ifndef PROJECT_MOTOR_CONTROLLER_HALLSENSOR_H
+#define PROJECT_MOTOR_CONTROLLER_HALLSENSOR_H
+
+
+class HallSensor
+{
+};
+
+
+#endif //PROJECT_MOTOR_CONTROLLER_HALLSENSOR_H
