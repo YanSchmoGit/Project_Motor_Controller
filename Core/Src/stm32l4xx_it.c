@@ -20,6 +20,8 @@
 /* Includes ------------------------------------------------------------------*/
 
 #include "stm32l4xx_it.h"
+#include "../../Cpp_App/Inc/BridgeFunctions.h"
+#include "stm32l476xx.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -198,5 +200,21 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /* USER CODE BEGIN 1 */
+
+void EXTI9_5_IRQHandler(void)
+{
+  if (EXTI->PR1 & EXTI_PR1_PIF8)
+  {
+
+    // Call bridge function
+
+    cpp_handle_interrupt_exti9_5();
+
+    // Reset interrupt
+
+    EXTI->PR1 |= EXTI_PR1_PIF8;
+
+  }
+}
 
 /* USER CODE END 1 */

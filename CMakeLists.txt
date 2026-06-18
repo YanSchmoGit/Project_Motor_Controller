@@ -33,12 +33,13 @@ enable_language(C ASM)
 
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME}
-        Cpp_App/Scr/Application.cpp
+        Cpp_App/Src/Application.cpp
         Cpp_App/Inc/Application.h
-        Cpp_App/Scr/HallSensor.cpp
+        Cpp_App/Src/HallSensor.cpp
         Cpp_App/Inc/HallSensor.h
-        Cpp_App/Scr/MotorDriver.cpp
-        Cpp_App/Inc/MotorDriver.h)
+        Cpp_App/Src/MotorDriver.cpp
+        Cpp_App/Inc/MotorDriver.h
+        Cpp_App/Inc/BridgeFunctions.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)

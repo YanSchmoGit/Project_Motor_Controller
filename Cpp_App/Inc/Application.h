@@ -8,6 +8,7 @@ extern "C" {
 // Diese Funktion wird von der main.c aufgerufen
 void Application_Main(void);
 
+
 #ifdef __cplusplus
 }
 #endif
