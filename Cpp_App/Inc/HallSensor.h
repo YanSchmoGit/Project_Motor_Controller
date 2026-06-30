@@ -6,19 +6,24 @@
 #define PROJECT_MOTOR_CONTROLLER_HALLSENSOR_H
 #include <cstdint>
 
-
 class HallSensor
 {
 private:
-    uint32_t count;
+    uint32_t last_cycle_count;
+    uint32_t actual_cycle_count;
+    uint32_t delta_count; // cycle counts between input signals
 
-    uint8_t state;
+
 
 public:
     HallSensor();
-    void countSignals();
+
+    // Copy actual cycle value between to interrupts - functions gets called by interrupt
+    void countSignals(); // interrupt function
+
+    // Get / Set functions
     uint32_t getCount() const;
-    uint8_t getState() const;
+
 
 
 };

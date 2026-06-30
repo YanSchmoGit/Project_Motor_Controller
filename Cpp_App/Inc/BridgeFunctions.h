@@ -11,9 +11,10 @@ extern "C" {
 
 // Bridge function interrupts
 
-// EXTI9_5
+// TIM5
 
-void cpp_handle_interrupt_exti9_5(void);
+
+void cpp_handle_interrupt_tim5(void);
 
 
 #ifdef __cplusplus

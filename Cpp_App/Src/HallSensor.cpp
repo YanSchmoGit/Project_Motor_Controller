@@ -8,49 +8,59 @@
 
 HallSensor::HallSensor()
 {
-    count = 0;
+    // Init TIM5 & GPIOA for input capture modus
 
-    // Test Hall Sensor PC8
+    RCC->APB1ENR1 |= RCC_APB1ENR1_TIM5EN;
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
 
-    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
-    GPIOC->MODER &= ~GPIO_MODER_MODE8_Msk;
-    GPIOC->PUPDR &= ~GPIO_PUPDR_PUPD8_Msk;
 
-    // Activate interrupt
+    // Configure AF 2 for GPIOA PA0
 
-    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN; // Activate SYSCFG - Needed for EXTI Mapping
+    GPIOA->MODER &= ~GPIO_MODER_MODE0_Msk;
+    GPIOA->MODER |= GPIO_MODER_MODE0_1;
 
-    SYSCFG->EXTICR[2] &= ~SYSCFG_EXTICR3_EXTI8_Msk;
-    SYSCFG->EXTICR[2] |= SYSCFG_EXTICR3_EXTI8_PC; // Map EXTI8 to port C
+    GPIOA->AFR[0] &= ~GPIO_AFRL_AFSEL0_Msk;
+    GPIOA->AFR[0] |= GPIO_AFRL_AFSEL0_1;
 
-    EXTI->IMR1 |= EXTI_IMR1_IM8;
-    EXTI->FTSR1 |= EXTI_FTSR1_FT8;
-    EXTI->RTSR1 &= ~EXTI_RTSR1_RT8;
 
-    NVIC_EnableIRQ(EXTI9_5_IRQn);
+    // Configure timer 5
 
+    TIM5->PSC = 0;
+    TIM5->ARR = 0xFFFFFFFF;
+
+
+    // Configure channel 1 as input
+    TIM5->CCMR1 &= ~TIM_CCMR1_CC1S;
+    TIM5->CCMR1 |= TIM_CCMR1_CC1S_0;
+
+    // Configure edge detection (rising edge, CC1P = 0, CC1NP = 0)
+    TIM5->CCER &= ~(TIM_CCER_CC1P | TIM_CCER_CC1NP);
+
+    // Activate capture for channel 1
+    TIM5->CCER |= TIM_CCER_CC1E;
+
+    // Activate interrupts
+    TIM5->DIER |= TIM_DIER_CC1IE;
+    NVIC_EnableIRQ(TIM5_IRQn);
+
+    // Start timer
+    TIM5->CR1 |= TIM_CR1_CEN;
 }
 
 void HallSensor::countSignals()
 {
-    if (state != 1)
-    {
-        state = 1;
-    }
-    else
-    {
-        state = 0;
-    }
+    actual_cycle_count = TIM5->CCR1;
+    delta_count = actual_cycle_count - last_cycle_count;
+    last_cycle_count = actual_cycle_count;
 
-    count++;
 }
+
 
 uint32_t HallSensor::getCount() const
 {
-    return count;
+    return delta_count;
 }
 
-uint8_t HallSensor::getState() const
-{
-    return state;
-}
+
+
+
