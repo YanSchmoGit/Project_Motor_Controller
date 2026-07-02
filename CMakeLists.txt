@@ -39,7 +39,11 @@ add_executable(${CMAKE_PROJECT_NAME}
         Cpp_App/Inc/HallSensor.h
         Cpp_App/Src/MotorDriver.cpp
         Cpp_App/Inc/MotorDriver.h
-        Cpp_App/Inc/BridgeFunctions.h)
+        Cpp_App/Inc/BridgeFunctions.h
+        Cpp_App/Src/Init.cpp
+        Cpp_App/Inc/Init.h
+        Cpp_App/Src/PIController.cpp
+        Cpp_App/Inc/PIController.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)

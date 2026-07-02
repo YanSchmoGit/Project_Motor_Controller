@@ -212,4 +212,10 @@ void TIM5_IRQHandler(void)
     }
 }
 
+// Interrupt Service Routine for TIM3
+void TIM3_IRQHandler(void)
+{
+    cpp_handle_interrupt_tim3();
+}
+
 /* USER CODE END 1 */

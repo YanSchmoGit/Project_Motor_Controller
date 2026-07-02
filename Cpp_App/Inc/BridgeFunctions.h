@@ -16,6 +16,8 @@ extern "C" {
 
 void cpp_handle_interrupt_tim5(void);
 
+void cpp_handle_interrupt_tim3(void);
+
 
 #ifdef __cplusplus
 }

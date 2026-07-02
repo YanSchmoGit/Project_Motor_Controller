@@ -4,12 +4,31 @@
 
 #include "../Inc/MotorDriver.h"
 
+#include <type_traits>
+
 HallSensor* MotorDriver::instancePointer = nullptr;
 
+
 MotorDriver::MotorDriver()
+    :
+      pi_controller(2.0f, 2.0f,10.0f,0.0f,1000.0f),
+      actual_speed(0.0f),
+      target_speed(0.0f),
+      pwm_value(0)
 {
     instancePointer = &hall_sensor;
 
+    // Init PWM for motor driver
+    initPWM();
+
+    // Init PI-controller
+    initPIController();
+
+
+}
+
+void MotorDriver::initPWM()
+{
     // Test Motor driver L298N
 
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
@@ -28,9 +47,11 @@ MotorDriver::MotorDriver()
     GPIOA->AFR[0] &= ~GPIO_AFRL_AFSEL5_Msk;
     GPIOA->AFR[0] |= GPIO_AFRL_AFSEL5_0;
 
+    // Calculate freuqncy for PWM Signal = f_pwm = f_tim / ((pcs + 1) * (arr + 1))
+
     RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;
-    //TIM2->PSC = 1;
-    TIM2->ARR = 499;
+    TIM2->PSC = 3;
+    TIM2->ARR = 999;
 
     TIM2->CCMR1 &= ~(TIM_CCMR1_CC1S_Msk | TIM_CCMR1_OC1M_Msk);
     TIM2->CCMR1 |= TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2;
@@ -43,35 +64,57 @@ MotorDriver::MotorDriver()
     TIM2->CR1 |= TIM_CR1_CEN;
 }
 
+void MotorDriver::initPIController()
+{
+    // Init TIM 3 for controller cycle interrupt
+
+    RCC->APB1ENR1 |= RCC_APB1ENR1_TIM3EN;
+
+    // 10ms cycle
+    TIM3->PSC = (SystemCoreClock / 1000000) - 1;
+    TIM3->ARR = 10000 - 1;
+
+    TIM3->EGR |= TIM_EGR_UG; // Generate an update
+    TIM3->SR &= ~TIM_SR_UIF; // Reset the interrupt bit. Interrupt generated from update will be reset.
+
+    TIM3->DIER |= TIM_DIER_UIE; // Enable interrupt
+    NVIC_EnableIRQ(TIM3_IRQn);
+
+    TIM3->CR1 |= TIM_CR1_CEN;
+
+}
+
 void MotorDriver::DriveMotor(std::uint32_t speed, std::int16_t direction)
 {
 
     calcSpeed();
 
+    target_speed = speed;
+
     if (direction == 0)
     {
         GPIOA->BSRR |= GPIO_BSRR_BS6;
         GPIOA->BSRR |= GPIO_BSRR_BR7;
-        TIM2->CCR1 = speed;
+        TIM2->CCR1 = pwm_value;
     }
     else
     {
         GPIOA->BSRR |= GPIO_BSRR_BR6;
         GPIOA->BSRR |= GPIO_BSRR_BS7;
-        TIM2->CCR1 = speed;
+        TIM2->CCR1 = pwm_value;
     }
 }
 
-uint32_t MotorDriver::SetMotorSpeed(std::uint32_t speed)
+void MotorDriver::controllerCycle10ms()
 {
-    uint32_t dutyCycle = TIM2->ARR;
-    if (speed < (dutyCycle / 2))
+    if (TIM3->SR & TIM_SR_UIF)
     {
-        return dutyCycle;
-    }
-        return speed;
+        pwm_value = pi_controller.update(this->target_speed, this->actual_speed);
 
+        TIM3->SR &= ~TIM_SR_UIF;
+    }
 }
+
 
 void MotorDriver::calcSpeed()
 {
@@ -79,12 +122,17 @@ void MotorDriver::calcSpeed()
 
     float actual_speed_linear = (7.5f * (float)SystemCoreClock) / (float)actual_count;
 
-    speed = actual_speed_linear;
+    actual_speed = actual_speed_linear;
 }
 
 float MotorDriver::getSpeed()
 {
-        return speed;
+        return actual_speed;
+}
+
+uint32_t MotorDriver::getPWMValue()
+{
+    return pwm_value;
 }
 
 extern "C" void cpp_handle_interrupt_tim5(void)
@@ -95,3 +143,5 @@ extern "C" void cpp_handle_interrupt_tim5(void)
         MotorDriver::instancePointer->countSignals();
     }
 }
+
+
