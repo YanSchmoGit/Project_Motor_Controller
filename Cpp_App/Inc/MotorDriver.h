@@ -36,11 +36,11 @@ public:
 
     // Init functions
 
-    void initPWM();
-    void initPIController();
+    static void initPWM();
+    static void initPIController();
 
     // Drive motor
-    void DriveMotor(std::uint32_t speed, std::int16_t direction);
+    void DriveMotor(float speed, int16_t direction);
     void controllerCycle10ms();
 
 
@@ -48,8 +48,8 @@ public:
     void calcSpeed();
 
     // Get / Set functions
-    float getSpeed();
-    uint32_t getPWMValue();
+    [[nodiscard]] float getSpeed() const ;
+    [[nodiscard]] uint32_t getPWMValue() const;
 
 
 

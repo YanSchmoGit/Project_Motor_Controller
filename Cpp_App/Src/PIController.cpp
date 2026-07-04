@@ -5,27 +5,24 @@
 #include "../Inc/PIController.h"
 
 
-PIController::PIController(float kp, float ki, float sample_time_ms, float min_output, float max_output)
+PIController::PIController(const float kp, const float ki, const float sample_time_ms, const float min_output, const float max_output)
+    : kp_(kp), ki_(ki), sample_time_ms_(sample_time_ms), min_output_(min_output), max_output_(max_output)
 {
-    this->kp_ = kp;
-    this->ki_ = ki;
-    this->sample_time_ms_ = sample_time_ms;
-    this->min_output_ = min_output;
-    this->max_output_ = max_output;
+
 }
 
 uint32_t PIController::update(float setpoint, float current_value)
 {
     // Calculate error
-    float error = setpoint - current_value;
+    const float error = setpoint - current_value;
 
     // Calculate integral
-    float delta_integral = error * this->sample_time_ms_;
+    float const delta_integral = error * this->sample_time_ms_;
     integral_sum_ += delta_integral;
 
     // Calculate i-part & p-part
-    float p_term = this->kp_ * error;
-    float i_term = this->ki_ * integral_sum_;
+    float const  p_term = this->kp_ * error;
+    float const  i_term = this->ki_ * integral_sum_;
 
     // output
     float output = p_term + i_term;

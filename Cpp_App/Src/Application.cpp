@@ -14,6 +14,8 @@ uint32_t systemClock;
 uint32_t pwm_value;
 MotorDriver Motor;
 
+int32_t counter_zeros;
+
 void Application_Main(void)
 {
 
@@ -21,11 +23,11 @@ void Application_Main(void)
 
 
 
-    while (1)
+    while (true)
     {
         pwm_value = Motor.getPWMValue();
 
-        Motor.DriveMotor(400, 1);
+        Motor.DriveMotor(600.0f, 1);
 
         actualSpeed = Motor.getSpeed();
     }

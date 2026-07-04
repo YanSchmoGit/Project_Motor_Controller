@@ -7,6 +7,7 @@
 
 
 HallSensor::HallSensor()
+: last_cycle_count(0), actual_cycle_count(0), delta_count(0)
 {
     // Init TIM5 & GPIOA for input capture modus
 

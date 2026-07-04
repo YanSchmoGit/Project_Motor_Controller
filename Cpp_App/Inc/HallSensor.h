@@ -9,9 +9,9 @@
 class HallSensor
 {
 private:
-    uint32_t last_cycle_count;
-    uint32_t actual_cycle_count;
-    uint32_t delta_count; // cycle counts between input signals
+    uint32_t last_cycle_count{};
+    uint32_t actual_cycle_count{};
+    uint32_t delta_count{}; // cycle counts between input signals
 
 
 

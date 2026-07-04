@@ -11,7 +11,7 @@ HallSensor* MotorDriver::instancePointer = nullptr;
 
 MotorDriver::MotorDriver()
     :
-      pi_controller(2.0f, 2.0f,10.0f,0.0f,1000.0f),
+      pi_controller(0.2f, 0.5f,10.0f,0.0f,1000.0f),
       actual_speed(0.0f),
       target_speed(0.0f),
       pwm_value(0)
@@ -84,7 +84,7 @@ void MotorDriver::initPIController()
 
 }
 
-void MotorDriver::DriveMotor(std::uint32_t speed, std::int16_t direction)
+void MotorDriver::DriveMotor(const float speed, const int16_t direction)
 {
 
     calcSpeed();
@@ -118,19 +118,26 @@ void MotorDriver::controllerCycle10ms()
 
 void MotorDriver::calcSpeed()
 {
-    uint32_t actual_count = hall_sensor.getCount();
+    const auto actual_count = static_cast<float>(hall_sensor.getCount());
+    float actual_speed_linear = 0.0f;
+    if (actual_count > 0.0000001f)
+    {
+        actual_speed_linear = (7.5f * static_cast<float>(SystemCoreClock)) / actual_count;
+    }
 
-    float actual_speed_linear = (7.5f * (float)SystemCoreClock) / (float)actual_count;
+
+
+
 
     actual_speed = actual_speed_linear;
 }
 
-float MotorDriver::getSpeed()
+float MotorDriver::getSpeed() const
 {
         return actual_speed;
 }
 
-uint32_t MotorDriver::getPWMValue()
+uint32_t MotorDriver::getPWMValue() const
 {
     return pwm_value;
 }
