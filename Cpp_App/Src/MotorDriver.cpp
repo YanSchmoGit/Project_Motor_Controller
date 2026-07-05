@@ -11,7 +11,7 @@ HallSensor* MotorDriver::instancePointer = nullptr;
 
 MotorDriver::MotorDriver()
     :
-      pi_controller(0.2f, 0.5f,10.0f,0.0f,1000.0f),
+      pi_controller(2.0f, 1.5f,10.0f,0.0f,1000.0f),
       actual_speed(0.0f),
       target_speed(0.0f),
       pwm_value(0)

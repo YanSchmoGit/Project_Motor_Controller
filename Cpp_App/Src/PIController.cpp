@@ -11,37 +11,45 @@ PIController::PIController(const float kp, const float ki, const float sample_ti
 
 }
 
-uint32_t PIController::update(float setpoint, float current_value)
+int32_t PIController::update(float setpoint, float current_value)
 {
-    // Calculate error
+    // Calculate error value
     const float error = setpoint - current_value;
 
-    // Calculate integral
-    float const delta_integral = error * this->sample_time_ms_;
-    integral_sum_ += delta_integral;
+    // Calculate p-part
+    const float p_term = this->kp_ * error;
 
-    // Calculate i-part & p-part
-    float const  p_term = this->kp_ * error;
-    float const  i_term = this->ki_ * integral_sum_;
+    // Sum up integral - based in sample time in seconds
+    const float dt_seconds = this->sample_time_ms_ / 1000.0f;
+    integral_sum_ += error * dt_seconds;
 
-    // output
+    // Anti wind up for the integral part
+    if (integral_sum_ > max_output_)
+    {
+        integral_sum_ = max_output_;
+    }
+    else if (integral_sum_ < min_output_)
+    {
+        integral_sum_ = min_output_;
+    }
+
+    // Calculate the i-part - with the already limited integral part
+    const float i_term = this->ki_ * integral_sum_;
+
+    // Calculate output value
     float output = p_term + i_term;
 
-
-    //Anti-Windup & setpoint limitation
-
+    // Anti wind up for the p-part
     if (output > max_output_)
     {
         output = max_output_;
-        integral_sum_ -= delta_integral;
     }
     else if (output < min_output_)
     {
         output = min_output_;
-        integral_sum_ -= delta_integral;
     }
 
-    return static_cast<uint32_t>(output);
+    return static_cast<int32_t>(output);
 }
 
 

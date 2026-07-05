@@ -24,7 +24,7 @@ public:
     PIController(float kp, float ki, float sample_time_ms, float min_output, float max_output);
 
     // Update values
-    uint32_t update(float setpoint, float current_value);
+    int32_t update(float setpoint, float current_value);
 
     // Rest integration result
     void reset();

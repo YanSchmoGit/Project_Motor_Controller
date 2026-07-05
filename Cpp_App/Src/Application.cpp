@@ -27,7 +27,7 @@ void Application_Main(void)
     {
         pwm_value = Motor.getPWMValue();
 
-        Motor.DriveMotor(600.0f, 1);
+        Motor.DriveMotor(1000.0f, 1);
 
         actualSpeed = Motor.getSpeed();
     }
