@@ -33,7 +33,8 @@ public:
     void calcSpeed();
 
     // Get / Set functions
-    [[nodiscard]] float getSpeed() const ;
+    [[nodiscard]] float getActualSpeed() const;
+    [[nodiscard]] float getTargetSpeed() const;
     [[nodiscard]] uint32_t getPWMValue() const;
 
 

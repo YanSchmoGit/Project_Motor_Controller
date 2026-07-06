@@ -43,7 +43,9 @@ add_executable(${CMAKE_PROJECT_NAME}
         Cpp_App/Src/Init.cpp
         Cpp_App/Inc/Init.h
         Cpp_App/Src/PIController.cpp
-        Cpp_App/Inc/PIController.h)
+        Cpp_App/Inc/PIController.h
+        Cpp_App/Src/Terminal.cpp
+        Cpp_App/Inc/Terminal.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)

@@ -4,7 +4,6 @@
 
 #include "../Inc/MotorDriver.h"
 
-#include <type_traits>
 
 HallSensor* MotorDriver::instancePointer = nullptr;
 
@@ -125,16 +124,17 @@ void MotorDriver::calcSpeed()
         actual_speed_linear = (7.5f * static_cast<float>(SystemCoreClock)) / actual_count;
     }
 
-
-
-
-
     actual_speed = actual_speed_linear;
 }
 
-float MotorDriver::getSpeed() const
+float MotorDriver::getActualSpeed() const
 {
         return actual_speed;
+}
+
+float MotorDriver::getTargetSpeed() const
+{
+        return target_speed;
 }
 
 uint32_t MotorDriver::getPWMValue() const
