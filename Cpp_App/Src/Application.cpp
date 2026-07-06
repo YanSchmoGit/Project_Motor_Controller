@@ -40,7 +40,6 @@ void Application_Main(void)
 
         terminal.terminalSend(static_cast<uint32_t>(targetSpeed), static_cast<uint32_t>(actualSpeed));
 
-        __WFI();
 
     }
 }
