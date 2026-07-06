@@ -12,21 +12,6 @@
 
 class MotorDriver
 {
-private:
-    // Hall sensor - speed measurement
-    HallSensor hall_sensor;
-
-    // PI motor controller
-    PIController pi_controller;
-
-    // Actual speed motor
-    float actual_speed;
-
-    // Target speed motor
-    float target_speed;
-
-    // PWM value
-    uint32_t pwm_value;
 
 public:
     MotorDriver();
@@ -52,7 +37,21 @@ public:
     [[nodiscard]] uint32_t getPWMValue() const;
 
 
+private:
+    // Hall sensor - speed measurement
+    HallSensor hall_sensor;
 
+    // PI motor controller
+    PIController pi_controller;
+
+    // Actual speed motor
+    float actual_speed;
+
+    // Target speed motor
+    float target_speed;
+
+    // PWM value
+    uint32_t pwm_value;
 
 };
 

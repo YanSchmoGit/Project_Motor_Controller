@@ -9,6 +9,15 @@
 
 class PIController
 {
+public:
+    PIController(float kp, float ki, float sample_time_ms, float min_output, float max_output);
+
+    // Update values
+    int32_t update(float setpoint, float current_value);
+
+    // Rest integration result
+    void reset();
+
 private:
     float kp_;
     float ki_;
@@ -19,16 +28,6 @@ private:
     float max_output_;
 
     float integral_sum_ = 0.0f;
-
-public:
-    PIController(float kp, float ki, float sample_time_ms, float min_output, float max_output);
-
-    // Update values
-    int32_t update(float setpoint, float current_value);
-
-    // Rest integration result
-    void reset();
-
 
 };
 
