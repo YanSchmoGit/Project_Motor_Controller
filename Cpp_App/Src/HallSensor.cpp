@@ -46,6 +46,8 @@ HallSensor::HallSensor()
 
     // Start timer
     TIM5->CR1 |= TIM_CR1_CEN;
+
+    first_count = true;
 }
 
 void HallSensor::countSignals()
