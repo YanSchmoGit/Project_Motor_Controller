@@ -16,13 +16,13 @@ For a detailed visual overview of the wiring, signal routing, and system archite
 
 ### Component Breakdown
 * **Microcontroller:**
-  * **STM32L465RG Nucleo-64** (ARM Cortex-M4, handles PI loop, PWM generation, and DMA operations)
+  * **STM32L465RG Nucleo** 
 * **Power & Actuation:**
-  * **L298N** (Dual H-Bridge DC motor driver for bidirectional speed control)
+  * **L298N** 
 * **Feedback Mechanism:**
-  * **Infineon TLE4945L** (Digital bipolar Hall effect sensor for precise speed/RPM detection)
+  * **Infineon TLE4945L** 
 * **Communication Interface:**
-  * **USART with DMA** (Non-blocking, zero-overhead serial terminal telemetry interface)
+  * **USART with DMA** 
 
 ---
 
