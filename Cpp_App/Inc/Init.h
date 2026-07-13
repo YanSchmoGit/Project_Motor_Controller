@@ -9,7 +9,11 @@
 #include <stm32l4xx.h>
 namespace Init
 {
+    inline volatile uint32_t ticks = 0;
+
     void initSystemClock();
+
+    void delay(uint32_t ms);
 
 
 }

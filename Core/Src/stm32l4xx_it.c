@@ -185,7 +185,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
     /* USER CODE BEGIN SysTick_IRQn 0 */
-
+    cpp_handle_systick();
     /* USER CODE END SysTick_IRQn 0 */
     /* USER CODE BEGIN SysTick_IRQn 1 */
 
@@ -217,5 +217,7 @@ void TIM3_IRQHandler(void)
 {
     cpp_handle_interrupt_tim3();
 }
+
+
 
 /* USER CODE END 1 */

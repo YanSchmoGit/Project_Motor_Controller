@@ -13,7 +13,7 @@ namespace Init
 
         RCC->CR |= RCC_CR_HSION;
 
-        while (!(RCC->CR & RCC_CR_HSIRDY));
+        while (!(RCC->CR & RCC_CR_HSIRDY)) {}
 
         // Configure waite states
         FLASH->ACR &= ~FLASH_ACR_LATENCY;
@@ -28,5 +28,19 @@ namespace Init
 
         SystemCoreClockUpdate();
 
-       }
+        // Config SysTick
+        SysTick_Config(SystemCoreClock / 1000);
+    }
+
+    void delay(const uint32_t ms)
+    {
+        const uint32_t start = ticks;
+        while (ticks - start < ms);
+    }
+
+    extern "C" void cpp_handle_systick(void)
+    {
+        ++ticks;
+    }
+
 }

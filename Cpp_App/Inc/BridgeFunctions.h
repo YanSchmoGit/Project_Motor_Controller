@@ -18,6 +18,8 @@ void cpp_handle_interrupt_tim5(void);
 
 void cpp_handle_interrupt_tim3(void);
 
+void cpp_handle_systick(void);
+
 
 #ifdef __cplusplus
 }
